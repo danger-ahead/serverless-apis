@@ -3,12 +3,12 @@ import { NextApiRequest, NextApiResponse } from '../utils/index';
 
 const whiteList = ['https://www.nextjsdevfolio.vercel.app'];
 
-if (process.env.NEXT_APP_ENV === 'dev') {
+if (process.env.NEXT_APP_ENV) {
 	whiteList.push('http://localhost:3000');
 }
 
 function checkOrigin(origin: any) {
-	if (process.env.NEXT_APP_ENV === 'dev') {
+	if (process.env.NEXT_APP_ENV) {
 		if (whiteList.indexOf(origin) !== -1 || !origin) {
 			return true;
 		}
