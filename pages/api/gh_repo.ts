@@ -44,6 +44,7 @@ export default async function handler(
 		homepage: data['homepage'],
 		language: data['language'],
 		open_issues: data['open_issues'],
+		topics:data["topics"]
 	};
 
 	return res
