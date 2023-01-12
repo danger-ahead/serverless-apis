@@ -1,16 +1,16 @@
+/* needs github personal access token in .env with appropriate scopes */
+
 import {
 	NextApiRequest,
 	NextApiResponse,
 	runMiddleware,
+	RespError,
+	github,
 } from '../../utils/index';
-
-type Error = {
-	error?: string;
-};
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<Error>
+	res: NextApiResponse<RespError>
 ) {
 	try {
 		await runMiddleware(req, res);
@@ -22,7 +22,7 @@ export default async function handler(
 
 	const requestHeaders: HeadersInit = new Headers();
 	requestHeaders.set('Content-Type', 'application/json');
-	requestHeaders.set('authorization', `${process.env.GH_PAT}`);
+	requestHeaders.set('Authorization', `Bearer ${process.env.GH_PAT}`);
 
 	const result = await fetch(
 		`https://api.github.com/repos/${owner}/${repo}`,
