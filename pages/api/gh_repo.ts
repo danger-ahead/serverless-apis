@@ -18,19 +18,16 @@ export default async function handler(
 		return res.status(405).json({ error: `${e}` });
 	}
 
-	const { owner , repo } = req.query
+	const { owner, repo } = req.query;
 
 	const requestHeaders: HeadersInit = new Headers();
 	requestHeaders.set('Content-Type', 'application/json');
 	requestHeaders.set('Authorization', `Bearer ${process.env.GH_PAT}`);
 
-	const result = await fetch(
-		`https://api.github.com/repos/${owner}/${repo}`,
-		{
-			method: 'GET',
-			headers: requestHeaders,
-		}
-	);
+	const result = await fetch(`https://api.github.com/repos/${owner}/${repo}`, {
+		method: 'GET',
+		headers: requestHeaders,
+	});
 
 	const data = await result.json();
 
@@ -44,7 +41,7 @@ export default async function handler(
 		homepage: data['homepage'],
 		language: data['language'],
 		open_issues: data['open_issues'],
-		topics:data["topics"]
+		topics: data['topics'],
 	};
 
 	return res

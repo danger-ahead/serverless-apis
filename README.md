@@ -11,12 +11,7 @@ npm run dev  # endpoints are at http://localhost:8000/api/
 
 ```
 # Private API; only accessible from whitelisted origins
-GET /api/gh_repo
-    JSON body
-    {
-        "owner": "danger-ahead",
-        "repo": "flutter_dev_folio"
-    }
+GET /api/gh_repo?owner=REPO_OWNER&repo=REPO_NAME
 ```
 
 ### Get WakaTime stats (SVG):

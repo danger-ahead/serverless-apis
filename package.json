@@ -1,5 +1,5 @@
 {
-	"name": "serverless_gh_api",
+	"name": "serverless_apis",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
