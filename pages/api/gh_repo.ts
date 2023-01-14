@@ -35,7 +35,6 @@ export default async function handler(
 		name: data['name'],
 		description: data['description'],
 		star_gazers: data['stargazers_count'],
-		forks: data['forks'],
 		forks_count: data['forks_count'],
 		html_url: data['html_url'],
 		homepage: data['homepage'],
