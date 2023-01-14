@@ -1,7 +1,9 @@
 import Cors from 'cors';
 import { NextApiRequest, NextApiResponse } from '../utils/index';
 
-const whiteList = ['https://www.nextjsdevfolio.vercel.app'];
+const whiteList = [
+	'https://www.nextjsdevfolio.vercel.app, https://nextjsdevfolio.vercel.app',
+];
 
 if (process.env.NEXT_APP_ENV) {
 	whiteList.push('http://localhost:3000');

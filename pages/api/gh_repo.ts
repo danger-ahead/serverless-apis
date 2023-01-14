@@ -5,7 +5,6 @@ import {
 	NextApiResponse,
 	runMiddleware,
 	RespError,
-	github,
 } from '../../utils/index';
 
 export default async function handler(
