@@ -1,22 +1,11 @@
 /* needs github personal access token in .env with appropriate scopes */
 
-import {
-	NextApiRequest,
-	NextApiResponse,
-	runMiddleware,
-	RespError,
-} from '../../utils/index';
+import { NextApiRequest, NextApiResponse, RespError } from '../../utils/index';
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<RespError>
 ) {
-	try {
-		await runMiddleware(req, res);
-	} catch (e) {
-		return res.status(405).json({ error: `${e}` });
-	}
-
 	const { owner, repo } = req.query;
 
 	const requestHeaders: HeadersInit = new Headers();

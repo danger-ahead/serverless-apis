@@ -16,10 +16,13 @@ const nextConfig = {
 				source: '/api/gh_repo',
 				headers: [
 					{ key: 'Access-Control-Allow-Credentials', value: 'true' },
-					{ key: 'Access-Control-Allow-Origin', value: '*' },
+					{
+						key: 'Access-Control-Allow-Origin',
+						value: `${process.env.NEXT_PUBLIC_GH_REPO_ALLOW_ORIGIN}`,
+					},
 					{
 						key: 'Access-Control-Allow-Methods',
-						value: 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
+						value: 'GET',
 					},
 					{
 						key: 'Access-Control-Allow-Headers',
