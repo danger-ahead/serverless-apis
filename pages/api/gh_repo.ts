@@ -33,5 +33,6 @@ export default async function handler(
 
 	return res
 		.status(result.status)
+		.setHeader('Access-Control-Allow-Origin', process.env.NEXT_PUBLIC_GH_REPO_ALLOW_ORIGIN ?? '*')
 		.json(JSON.parse(JSON.stringify(responseData)));
 }
