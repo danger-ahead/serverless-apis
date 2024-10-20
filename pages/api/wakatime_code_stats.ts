@@ -7,15 +7,39 @@ import {
 	generateSVG,
 } from '../../utils/index';
 
+// In-memory cache
+let cache = {
+	data: null as Map<String, String> | null,
+	timestamp: 0,
+};
+
+// 24 hours
+const CACHE_DURATION = 86400 * 1000;
+
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse
 ) {
+	const { background_color, header_color, value_color, border_color } =
+		req.query;
+
+	const now = Date.now();
+	if (cache.data && now - cache.timestamp < CACHE_DURATION) {
+		const svg = generateSVG({
+			data: cache.data,
+			background_color,
+			header_color,
+			value_color,
+			border_color,
+		});
+		return res.status(200).send(svg);
+	}
+
 	const result = new Map<String, String>();
 
-	const fetchAllTimeBestDay = async () => {
+	const fetchMostUsedLanguage = async () => {
 		const res = await fetch(
-			`${wakatime}users/current/insights/best_day/all_time`,
+			`${wakatime}users/current/insights/languages/last_year`,
 			{
 				method: 'GET',
 				headers: {
@@ -25,12 +49,16 @@ export default async function handler(
 			}
 		);
 		const json = await res.json();
-		result.set('best_day', json['data']['best_day']['text']);
+		result.set('most_used_language', json['data']['languages'][0]['name']);
+		result.set(
+			'most_used_language_time',
+			json['data']['languages'][0]['total_seconds']
+		);
 	};
 
 	const fetchDailyAverageAndTotalTime = async () => {
 		const res = await fetch(
-			`${wakatime}users/current/insights/daily_average/all_time`,
+			`${wakatime}users/current/insights/daily_average/last_year`,
 			{
 				method: 'GET',
 				headers: {
@@ -45,12 +73,20 @@ export default async function handler(
 			json['data']['current_user']['daily_average']['text']
 		);
 		result.set('total_time', json['data']['current_user']['total']['text']);
-		result.set('start_date', json['data']['human_readable_range'].substring(5));
 	};
 
-	await Promise.all([fetchDailyAverageAndTotalTime(), fetchAllTimeBestDay()]);
+	await Promise.all([fetchDailyAverageAndTotalTime(), fetchMostUsedLanguage()]);
 
-	const svg = generateSVG(result);
+	cache.data = result;
+	cache.timestamp = now;
+
+	const svg = generateSVG({
+		data: result,
+		background_color,
+		header_color,
+		value_color,
+		border_color,
+	});
 
 	return res.status(200).send(svg);
 }

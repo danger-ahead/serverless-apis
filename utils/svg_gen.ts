@@ -1,36 +1,56 @@
-export function generateSVG(data: Map<String, String>) {
-	const width: string = '350';
-	const height: string = '150';
+function convertSecondsToTime(seconds: number) {
+	const totalSeconds = Math.floor(seconds);
 
-	return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" fill="none" role="img">
+	const hours = Math.floor(totalSeconds / 3600);
+
+	const minutes = Math.floor((totalSeconds % 3600) / 60);
+
+	return `${hours} hrs and ${minutes} mins`;
+}
+
+export function generateSVG({
+	data,
+	background_color,
+	header_color,
+	value_color,
+	border_color,
+}: {
+	data: Map<String, String | number>;
+	background_color: string | undefined | string[];
+	header_color: string | undefined | string[];
+	value_color: string | undefined | string[];
+	border_color: string | undefined | string[];
+}): string {
+	const width: string = '400';
+
+	const spacingY: number = 25;
+	const padding: number = 20;
+	let initialY: number = 25;
+	const textBlocks: number = 4;
+
+	const dynamicHeight = initialY + textBlocks * spacingY + padding;
+
+	return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${dynamicHeight}" viewBox="0 0 ${width} ${dynamicHeight}" fill="none" role="img">
         <title id="titleId">WakaTime Code Stats</title>
         <style>
-        .header {
-        font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
-        fill: #2f80ed;
-        animation: fadeInAnimation 0.8s ease-in-out forwards;
-        }
         @supports(-moz-appearance: auto) {
-        /* Selector detects Firefox */
-        .header { font-size: 15.5px; }
-        }
         .stat {
-        font: 600 14px 'Segoe UI', Ubuntu, "Helvetica Neue", Sans-Serif; fill: #434d58;
+        font: 600 14px 'Segoe UI', Ubuntu, "Helvetica Neue", Sans-Serif;
+        }
+        .header {
+        fill: #${header_color ?? '000000'};
+        }
+        .value {
+        fill: #${value_color ?? '000000'};
         }
         @supports(-moz-appearance: auto) {
-        /* Selector detects Firefox */
         .stat { font-size:12px; }
         }
         .stagger {
         opacity: 0;
         animation: fadeInAnimation 0.3s ease-in-out forwards;
         }
-        .not_bold { font-weight: 400 }
         .bold { font-weight: 700 }
-        .icon {
-        fill: #4c71f2;
-        display: none;
-        }
         /* Animations */
         @keyframes fadeInAnimation {
         from {
@@ -41,39 +61,47 @@ export function generateSVG(data: Map<String, String>) {
         }
         }
         </style>
-        <rect data-testid="card-bg" x="0.5" y="0.5" rx="4.5" height="99%" stroke="#e4e2e2" width="${(
-					parseInt(width) - 1
-				).toString()}" fill="#fffefe" stroke-opacity="1"/>
-        <g data-testid="card-title" transform="translate(25, 35)">
-        <g transform="translate(0, 0)">
-            <text x="0" y="0" class="header" data-testid="header">Since ${data.get(
-							'start_date'
-						)}:</text>
+        <rect x="0.5" y="0.5" rx="4.5" height="99%" stroke="#${
+					border_color ?? 'e4e2e2'
+				}" width="${(
+		parseInt(width) - 1
+	).toString()}" fill="#${background_color}" stroke-opacity="1"/>
+        <g transform="translate(25, 35)">
+
         </g>
-        </g>
-        <g data-testid="main-card-body" transform="translate(0, 55)">
+        <g>
         <svg x="0" y="0">
-            <g transform="translate(0, 0)">
-                <g class="stagger" style="animation-delay: 450ms" transform="translate(25, 0)">
-                    <text class="stat  bold" y="12.5">One day, I coded for:</text>
-                    <text class="stat  bold" x="199.01" y="12.5">${data.get(
-											'best_day'
-										)}</text>
-                </g>
-            </g>
-            <g transform="translate(0, 25)">
+            <g transform="translate(0, ${initialY})">
                 <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
-                    <text class="stat  bold" y="12.5">I coded for a total of:</text>
-                    <text class="stat  bold" x="199.01" y="12.5">${data.get(
+                    <text class="stat bold header" y="12.5">I coded for a total of</text>
+                    <text class="stat bold value" x="199.01" y="12.5">${data.get(
 											'total_time'
 										)}</text>
                 </g>
             </g>
-            <g transform="translate(0, 50)">
+            <g transform="translate(0, ${(initialY += spacingY)})">
                 <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
-                    <text class="stat  bold" y="12.5">My daily average is:</text>
-                    <text class="stat  bold" x="199.01" y="12.5">${data.get(
+                    <text class="stat bold header" y="12.5">My daily average is</text>
+                    <text class="stat bold value" x="199.01" y="12.5">${data.get(
 											'daily_average'
+										)}</text>
+                </g>
+            </g>
+            <g transform="translate(0, ${(initialY += spacingY)})">
+                <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
+                    <text class="stat bold header" y="12.5">My most used language is</text>
+                    <text class="stat bold value" x="199.01" y="12.5">${data.get(
+											'most_used_language'
+										)}</text>
+                </g>
+            </g>
+            <g transform="translate(0, ${(initialY += spacingY)})">
+                <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
+                    <text class="stat bold header" y="12.5">I used ${data.get(
+											'most_used_language'
+										)} for</text>
+                    <text class="stat bold value" x="199.01" y="12.5">${convertSecondsToTime(
+											data.get('most_used_language_time') as number
 										)}</text>
                 </g>
             </g>
