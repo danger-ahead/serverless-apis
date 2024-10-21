@@ -33,18 +33,14 @@ export function generateSVG({
 	return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${dynamicHeight}" viewBox="0 0 ${width} ${dynamicHeight}" fill="none" role="img">
         <title id="titleId">WakaTime Code Stats</title>
         <style>
-        @supports(-moz-appearance: auto) {
-        .stat {
-        font: 600 14px 'Segoe UI', Ubuntu, "Helvetica Neue", Sans-Serif;
-        }
         .header {
         fill: #${header_color ?? '000000'};
         }
         .value {
         fill: #${value_color ?? '000000'};
         }
-        @supports(-moz-appearance: auto) {
-        .stat { font-size:12px; }
+        .stat {
+        font: 600 14px 'Segoe UI', Ubuntu, "Helvetica Neue", Sans-Serif;
         }
         .stagger {
         opacity: 0;
@@ -58,7 +54,6 @@ export function generateSVG({
         }
         to {
         opacity: 1;
-        }
         }
         </style>
         <rect x="0.5" y="0.5" rx="4.5" height="99%" stroke="#${
