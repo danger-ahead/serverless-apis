@@ -1,4 +1,4 @@
-/* needs wakatime secret api key in .env in base64 encoded format */
+/* needs a raw WakaTime personal OAuth token (waka_...) in WAKATIME_API_KEY */
 
 import {
 	NextApiRequest,
@@ -44,10 +44,11 @@ export default async function handler(
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',
-					Authorization: `Basic ${process.env.WAKATIME_API_KEY}`,
+					Authorization: `Bearer ${process.env.WAKATIME_API_KEY}`,
 				},
 			}
 		);
+		if (!res.ok) throw new Error(`WakaTime ${res.status}: ${await res.text()}`);
 		const json = await res.json();
 		result.set('most_used_language', json['data']['languages'][0]['name']);
 		result.set(
@@ -63,10 +64,11 @@ export default async function handler(
 				method: 'GET',
 				headers: {
 					Accept: 'application/json',
-					Authorization: `Basic ${process.env.WAKATIME_API_KEY}`,
+					Authorization: `Bearer ${process.env.WAKATIME_API_KEY}`,
 				},
 			}
 		);
+		if (!res.ok) throw new Error(`WakaTime ${res.status}: ${await res.text()}`);
 		const json = await res.json();
 		result.set(
 			'daily_average',
